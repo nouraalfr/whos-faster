@@ -1,0 +1,54 @@
+{
+  "name": "whos-faster",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "concurrently --kill-others \"nodemon -e js,ejs,css app.js\" \"npx tailwindcss -m -i public/input.css -o public/output.css --watch\" ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "csurf": "^1.2.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.2.0",
+    "mysql2": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.0",
+    "browser-sync": "^3.0.3",
+    "concurrently": "^9.0.1",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
+    "prettier-plugin-ejs": "^1.0.3",
+    "prettier-plugin-tailwindcss": "^0.6.6",
+    "tailwindcss": "^3.4.10"
+  },
+  "prettier": {
+    "printWidth": 180,
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.ejs",
+        "options": {
+          "printWidth": 500
+        }
+      }
+    ],
+    "plugins": [
+      "prettier-plugin-ejs",
+      "prettier-plugin-tailwindcss"
+    ]
+  }
+}
