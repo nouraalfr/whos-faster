@@ -1,173 +1,191 @@
 <!doctype html>
 <html lang="ar" dir="rtl" class="dark">
-<%- include('head.ejs') -%>
+  <%- include('head.ejs') -%>
 
-<body class="flex min-h-screen flex-col bg-white dark:bg-gray-900">
-  <%- include('nav.ejs') -%>
-
-  <div class="mx-auto mt-40 rounded-lg bg-gray-600 text-white shadow-lg" id="time-selector">
-    <button id="120" class="rounded-lg px-4 py-2 hover:bg-gray-700">120s</button>
-    <button id="60" class="rounded-lg px-4 py-2 hover:bg-gray-700">60s</button>
-    <button id="30" class="rounded-lg px-4 py-2 hover:bg-gray-700">30s</button>
-    <button id="15" class="rounded-lg px-4 py-2 hover:bg-gray-700">15s</button>
-    <button id="0" class="rounded-lg px-4 py-2 hover:bg-gray-700">&#8734;</button>
-  </div>
-
-  <div class="mt-40 flex flex-col items-center justify-center px-4">
-    <% if (locals.errors) { %>
-    <div class="w-full max-w-sm rounded-lg border border-red-400 bg-red-100 px-4 py-2 dark:border-red-800 dark:bg-red-900/50">
-      <% errors.forEach(error => { %>
-      <div class="text-red-600 dark:text-red-400"><%= error.msg %></div>
-      <% }) %>
+  <body class="flex min-h-screen flex-col bg-white dark:bg-gray-900">
+    <%- include('nav.ejs') -%>
+    <!-- User Instruction Div -->
+    <div class="mx-auto mt-32 text-center text-xl text-white">
+      <p>للبدء انقر على الوقت المناسب</p>
     </div>
-    <% } %>
-    <div id="content" class="text-md line-clamp-6 text-center md:w-full md:text-lg lg:w-1/2 lg:text-2xl"></div>
-    <div id="results-container" class="mt-14 hidden w-3/4 max-w-lg space-y-4 rounded-lg border border-dashed border-purple-300 bg-gray-100 p-6 text-center md:w-full lg:w-full dark:border-gray-700 dark:bg-gray-800">
-      <p id="result-correct" class="text-lg font-semibold text-gray-900 md:text-xl lg:text-xl dark:text-gray-200"></p>
-      <p id="result-wpm" class="text-lg font-semibold text-gray-900 md:text-xl lg:text-xl dark:text-gray-200"></p>
-      <div id="signup" class="mt-4"></div>
+    <div class="mx-auto mt-10 rounded-lg bg-gray-600 text-white shadow-lg" id="time-selector">
+      <button id="120" class="rounded-lg px-4 py-2 hover:bg-gray-700">120s</button>
+      <button id="60" class="rounded-lg px-4 py-2 hover:bg-gray-700">60s</button>
+      <button id="30" class="rounded-lg px-4 py-2 hover:bg-gray-700">30s</button>
+      <button id="15" class="rounded-lg px-4 py-2 hover:bg-gray-700">15s</button>
+      <button id="0" class="rounded-lg px-4 py-2 hover:bg-gray-700">&#8734;</button>
     </div>
-  </div>
 
-  <script>
-    const content = '<%= locals.content %>'
-    const contentDiv = document.getElementById('content')
-    const words = content.split(' ')
-    const resultsContainer = document.getElementById('results-container')
-    const resultCorrect = document.getElementById('result-correct')
-    const resultWPM = document.getElementById('result-wpm')
-    const signupDiv = document.getElementById('signup')
-    const timeSelector = document.getElementById('time-selector')
-    const buttons = timeSelector.querySelectorAll('button')
+    <div class="mt-40 flex flex-col items-center justify-center px-4">
+      <% if (locals.errors) { %>
+      <div class="w-full max-w-sm rounded-lg border border-red-400 bg-red-100 px-4 py-2 dark:border-red-800 dark:bg-red-900/50">
+        <% errors.forEach(error => { %>
+        <div class="text-red-600 dark:text-red-400"><%= error.msg %></div>
+        <% }) %>
+      </div>
+      <% } %>
+      <div id="content" class="text-md line-clamp-6 text-center md:w-full md:text-lg lg:w-1/2 lg:text-2xl"></div>
+      <div id="results-container" class="mt-14 hidden w-3/4 max-w-lg space-y-4 rounded-lg border border-dashed border-purple-300 bg-gray-100 p-6 text-center md:w-full lg:w-full dark:border-gray-700 dark:bg-gray-800">
+        <p id="result-correct" class="text-lg font-semibold text-gray-900 md:text-xl lg:text-xl dark:text-gray-200"></p>
+        <p id="result-wpm" class="text-lg font-semibold text-gray-900 md:text-xl lg:text-xl dark:text-gray-200"></p>
+        <div id="signup" class="mt-4"></div>
+      </div>
+    </div>
 
-    let startTime
-    let timeout
-    let index = 0
-    let correct = 0
-    let word = 0
-    let typed = ''
+    <script>
+      const content = '<%= locals.content %>'
+      const contentDiv = document.getElementById('content')
+      const words = content.split(' ')
+      const resultsContainer = document.getElementById('results-container')
+      const resultCorrect = document.getElementById('result-correct')
+      const resultWPM = document.getElementById('result-wpm')
+      const signupDiv = document.getElementById('signup')
+      const timeSelector = document.getElementById('time-selector')
+      const buttons = timeSelector.querySelectorAll('button')
 
-    content.split('').forEach((char) => {
-      const span = document.createElement('span')
-      span.textContent = char
-      span.classList.add('text-gray-600', 'dark:text-gray-400')
-      contentDiv.appendChild(span)
-    })
+      let startTime
+      let timeout
+      let index = 0
+      let correct = 0
+      let word = 0
+      let typed = ''
 
-    buttons.forEach((button) => {
-      button.addEventListener('click', function(e) {
-        document.addEventListener('keydown', play)
+      content.split('').forEach((char, i) => {
+        const span = document.createElement('span')
+        span.textContent = char
+        span.classList.add('text-gray-600', 'dark:text-gray-400', 'relative')
+        contentDiv.appendChild(span)
+      })
 
-        index = 0
-        correct = 0
-        word = 0
-        typed = ''
-
-        Array.from(contentDiv.children).forEach((charSpan) => {
-          charSpan.classList.remove('text-red-500', 'dark:text-red-400', 'text-emerald-600', 'dark:text-emerald-400')
-          charSpan.classList.add('text-gray-600', 'dark:text-gray-400')
-        })
-
-        startTime = Date.now()
-
-        if (this.id !== '0') {
-          const timeLimit = parseInt(this.id, 10) * 1000
-          if (timeout) {
-            clearTimeout(timeout)
-            resultsContainer.classList.add('hidden')
-          }
-          timeout = setTimeout(finishTyping, timeLimit)
+      function moveCursor(fromIndex, toIndex) {
+        if (fromIndex >= 0 && fromIndex < content.length) {
+          contentDiv.children[fromIndex].classList.remove('after:absolute', 'after:h-full', 'after:w-0.5', 'after:bg-purple-400', 'after:animate-pulse', 'after:-right-0.5')
         }
-        resultsContainer.classList.add('hidden')
-        e.target.blur()
-      })
-    })
 
-    async function score(score, textID) {
-      const response = await fetch(`${window.location.origin}/attempt`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          textID: textID,
-          score: score,
-        }),
-        method: 'POST',
-      })
-    }
-
-    function finishTyping() {
-      document.removeEventListener('keydown', play)
-
-      const timeElapsed = (Date.now() - startTime) / 60000
-      const wpm = Math.round(correct / timeElapsed)
-      resultCorrect.innerHTML = `الكلمات الصحيحة:  ${correct}`
-      resultWPM.innerHTML = `كلمة في الدقيقة:  ${wpm}`
-
-      resultsContainer.classList.remove('hidden')
-
-      const textID = '<%= locals.textID %>'
-      const user = '<%= locals.user%>'
-
-      if (user) {
-        score(wpm, textID)
-      } else {
-        showSignupOption()
+        if (toIndex >= 0 && toIndex < content.length) {
+          contentDiv.children[toIndex].classList.add('after:absolute', 'after:h-full', 'after:w-0.5', 'after:bg-purple-400', 'after:animate-pulse', 'after:-right-0.5')
+        }
       }
-    }
 
-    function showSignupOption() {
-      signupDiv.innerHTML = `
-              <p class="text-black dark:text-white lg:text-lg md:text-lg text-md font-bold mt-4">
-                <a href="/register" class="underline  dark:text-purple-400 text-purple-600 hover:text-purple-500 dark:hover:text-purple-300">انشئ حسابك</a>
-                وسجل سرعة كتابتك مع أسرع ناس بالعالم!
-              </p>
-            `
-      signupDiv.classList.remove('hidden')
-    }
-
-    function checkWord() {
-      if (typed.trim() === words[word]) correct++
-      word++
-      typed = ''
-    }
-
-    function isArabicLetter(char) {
-      if (typeof char !== 'string' || char.length !== 1) {
-        return false
+      async function score(score, textID) {
+        const response = await fetch(`${window.location.origin}/attempt`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            textID: textID,
+            score: score,
+          }),
+          method: 'POST',
+        })
       }
-      const arabicRange = /[\u0621-\u064A\u066E-\u066F\u0671-\u06D3\u06D5-\u06FF\s،\.\:]/
-      return arabicRange.test(char)
-    }
 
-    function play(e) {
-      const char = content.charAt(index)
-      if (e.key === char && isArabicLetter(e.key)) {
-        contentDiv.children[index].classList.remove('text-red-500', 'dark:text-red-400')
-        contentDiv.children[index].classList.remove('text-gray-600', 'dark:text-gray-400')
-        contentDiv.children[index].classList.add('text-emerald-600', 'dark:text-emerald-400')
-        typed += e.key
-        index++
-      } else if ((e.key === 'Backspace' || e.key === 'Delete') && index > 0) {
-        index--
-        typed = typed.slice(0, -1)
-        contentDiv.children[index].classList.remove('text-red-500', 'dark:text-red-400')
-        contentDiv.children[index].classList.remove('text-emerald-600', 'dark:text-emerald-400')
-        contentDiv.children[index].classList.add('text-gray-600', 'dark:text-gray-400')
-      } else {
-        if (isArabicLetter(e.key)) {
+      function finishTyping() {
+        document.removeEventListener('keydown', play)
+
+        const timeElapsed = (Date.now() - startTime) / 60000
+        const wpm = Math.round(correct / timeElapsed)
+        resultCorrect.innerHTML = `الكلمات الصحيحة:  ${correct}`
+        resultWPM.innerHTML = `كلمة في الدقيقة:  ${wpm}`
+
+        resultsContainer.classList.remove('hidden')
+
+        const textID = '<%= locals.textID %>'
+        const user = '<%= locals.user%>'
+
+        if (user) {
+          score(wpm, textID)
+        } else {
+          showSignupOption()
+        }
+      }
+
+      function showSignupOption() {
+        signupDiv.innerHTML = `
+    <p class="text-black dark:text-white lg:text-lg md:text-lg text-md font-bold mt-4">
+      <a href="/register" class="underline  dark:text-purple-400 text-purple-600 hover:text-purple-500 dark:hover:text-purple-300">انشئ حسابك</a>
+      وسجل سرعة كتابتك مع أسرع ناس بالعالم!
+    </p>
+  `
+        signupDiv.classList.remove('hidden')
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', function (e) {
+          document.addEventListener('keydown', play)
+
+          index = 0
+          correct = 0
+          word = 0
+          typed = ''
+
+          Array.from(contentDiv.children).forEach((charSpan, i) => {
+            charSpan.classList.remove('after:absolute', 'after:h-full', 'after:w-0.5', 'after:bg-purple-500', 'after:animate-pulse', 'after:-right-0.5')
+            charSpan.classList.remove('text-red-500', 'dark:text-red-400', 'text-emerald-600', 'dark:text-emerald-400')
+            charSpan.classList.add('text-gray-600', 'dark:text-gray-400')
+          })
+
+          startTime = Date.now()
+
+          if (this.id !== '0') {
+            const timeLimit = parseInt(this.id, 10) * 1000
+            if (timeout) {
+              clearTimeout(timeout)
+              resultsContainer.classList.add('hidden')
+            }
+            timeout = setTimeout(finishTyping, timeLimit)
+          }
+          resultsContainer.classList.add('hidden')
+          e.target.blur()
+        })
+      })
+
+      function isArabicLetter(char) {
+        if (typeof char !== 'string' || char.length !== 1) {
+          return false
+        }
+        const arabicRange = /[\u0621-\u064A\u066E-\u066F\u0671-\u06D3\u06D5-\u06FF\s،\.\:]/
+        return arabicRange.test(char)
+      }
+
+      function checkWord() {
+        if (typed.trim() === words[word]) correct++
+        word++
+        typed = ''
+      }
+
+      function play(e) {
+        const char = content.charAt(index)
+        let oldIndex = index
+
+        if (e.key === char && isArabicLetter(e.key)) {
+          contentDiv.children[index].classList.remove('text-red-500', 'dark:text-red-400')
+          contentDiv.children[index].classList.remove('text-gray-600', 'dark:text-gray-400')
+          contentDiv.children[index].classList.add('text-emerald-600', 'dark:text-emerald-400')
+          typed += e.key
+          index++
+          moveCursor(oldIndex, index)
+        } else if ((e.key === 'Backspace' || e.key === 'Delete') && index > 0) {
+          oldIndex = index
+          index--
+          typed = typed.slice(0, -1)
+          contentDiv.children[index].classList.remove('text-red-500', 'dark:text-red-400')
+          contentDiv.children[index].classList.remove('text-emerald-600', 'dark:text-emerald-400')
+          contentDiv.children[index].classList.add('text-gray-600', 'dark:text-gray-400')
+          moveCursor(oldIndex, index)
+        } else {
           contentDiv.children[index].classList.remove('text-gray-600', 'dark:text-gray-400')
           contentDiv.children[index].classList.remove('text-emerald-600', 'dark:text-emerald-400')
           contentDiv.children[index].classList.add('text-red-500', 'dark:text-red-400')
           typed += e.key
           index++
+          moveCursor(oldIndex, index)
         }
+
+        if (e.key === ' ' || (char === '.' && content.charAt(index) === ' ') || index === content.length) checkWord()
+
+        if (index === content.length) finishTyping()
       }
-      if (e.key === ' ' || (char === '.' && content.charAt(index) === ' ') || index === content.length) checkWord()
-
-      if (index === content.length) finishTyping()
-    }
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
