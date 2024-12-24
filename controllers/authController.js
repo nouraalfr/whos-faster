@@ -36,7 +36,6 @@ exports.getLogin = (req, res) => {
 }
 
 exports.postLogin = (req, res) => {
-  console.log(req)
   const { username, password } = req.body
   const errors = validationResult(req)
 

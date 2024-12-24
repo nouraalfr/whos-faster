@@ -47,8 +47,6 @@ exports.getContent = (_, res) => {
       return res.render('play', { errors: [{ msg: 'حدث خطأ ما' }] })
     }
 
-    console.log(rows)
-
     const content = rows[0].content
     const textID = rows[0].id
     res.render('play', { content: content, textID: textID })
