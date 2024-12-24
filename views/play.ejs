@@ -157,7 +157,7 @@
       function play(e) {
         const char = content.charAt(index)
         let oldIndex = index
-
+        console.log(contentDiv.children[index], e.key)
         if (e.key === char && isArabicLetter(e.key)) {
           contentDiv.children[index].classList.remove('text-red-500', 'dark:text-red-400')
           contentDiv.children[index].classList.remove('text-gray-600', 'dark:text-gray-400')
@@ -174,12 +174,14 @@
           contentDiv.children[index].classList.add('text-gray-600', 'dark:text-gray-400')
           moveCursor(oldIndex, index)
         } else {
-          contentDiv.children[index].classList.remove('text-gray-600', 'dark:text-gray-400')
-          contentDiv.children[index].classList.remove('text-emerald-600', 'dark:text-emerald-400')
-          contentDiv.children[index].classList.add('text-red-500', 'dark:text-red-400')
-          typed += e.key
-          index++
-          moveCursor(oldIndex, index)
+          if (isArabicLetter(e.key)) {
+            contentDiv.children[index].classList.remove('text-gray-600', 'dark:text-gray-400')
+            contentDiv.children[index].classList.remove('text-emerald-600', 'dark:text-emerald-400')
+            contentDiv.children[index].classList.add('text-red-500', 'dark:text-red-400')
+            typed += e.key
+            index++
+            moveCursor(oldIndex, index)
+          }
         }
 
         if (e.key === ' ' || (char === '.' && content.charAt(index) === ' ') || index === content.length) checkWord()
