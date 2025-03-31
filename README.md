@@ -36,10 +36,3 @@ Run the following command to build and start the containers:
 ```bash
 docker-compose up --build
 ```
-
-If you don't prefer Docker, simply add an `.env` file with the same previous variables at your root directory, then run the following commands:
-
-```bash
-npm install
-npm run start
-```
